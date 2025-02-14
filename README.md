@@ -1,7 +1,3 @@
-Below is an updated `README.md` adjusted for the C++ port (cSpy):
-
----
-
 # cSpy
 
 cSpy is a lightweight, modern C++ tool inspired by [chaos](https://chaos.projectdiscovery.io/) from ProjectDiscovery.io and ported from [chaospy](https://github.com/zorox0x/chaospy/). It fetches the latest bug bounty program data and lets you list and download programs directly from the chaos-data index—now built in C++ for speed and efficiency!
