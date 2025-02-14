@@ -7,32 +7,33 @@
 #include <fstream>
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
-#include <filesystem>  // C++17 header for directory operations
+#include <filesystem>
 
-namespace fs = std::filesystem;
+using namespace std;
+using namespace std::filesystem;
 using json = nlohmann::json;
 
 // Terminal Colors
-const std::string Black        = "\033[30m";
-const std::string Red          = "\033[31m";
-const std::string Green        = "\033[32m";
-const std::string Yellow       = "\033[33m";
-const std::string Blue         = "\033[34m";
-const std::string Magenta      = "\033[35m";
-const std::string Cyan         = "\033[36m";
-const std::string LightGray    = "\033[37m";
-const std::string DarkGray     = "\033[90m";
-const std::string LightRed     = "\033[91m";
-const std::string LightGreen   = "\033[92m";
-const std::string LightYellow  = "\033[93m";
-const std::string LightBlue    = "\033[94m";
-const std::string LightMagenta = "\033[95m";
-const std::string LightCyan    = "\033[96m";
-const std::string White        = "\033[97m";
-const std::string Default      = "\033[0m";
+const string Black        = "\033[30m";
+const string Red          = "\033[31m";
+const string Green        = "\033[32m";
+const string Yellow       = "\033[33m";
+const string Blue         = "\033[34m";
+const string Magenta      = "\033[35m";
+const string Cyan         = "\033[36m";
+const string LightGray    = "\033[37m";
+const string DarkGray     = "\033[90m";
+const string LightRed     = "\033[91m";
+const string LightGreen   = "\033[92m";
+const string LightYellow  = "\033[93m";
+const string LightBlue    = "\033[94m";
+const string LightMagenta = "\033[95m";
+const string LightCyan    = "\033[96m";
+const string White        = "\033[97m";
+const string Default      = "\033[0m";
 
 // Banner string
-const std::string banner =
+const string banner =
     "\n" + LightGreen + "          _____ __                     ____\n"
     "         / ____/ /_  ____ _____  _____/ __ \\__  __\n"
     "        / /   / __ \\/ __ `/ __ \\/ ___/ /_/ / / / /\n"
@@ -46,17 +47,16 @@ const std::string banner =
     White;
 
 // Write callback for CURL
-static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
+static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+    ((string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
 // Perform HTTP GET and return result as string
-std::string httpGet(const std::string &url) {
+string httpGet(const string &url) {
     CURL* curl;
     CURLcode res;
-    std::string readBuffer;
+    string readBuffer;
     curl = curl_easy_init();
     if(curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -73,7 +73,7 @@ std::string httpGet(const std::string &url) {
 
 // Fetch JSON data from URL
 json getdata() {
-    std::string data = httpGet("https://chaos-data.projectdiscovery.io/index.json");
+    string data = httpGet("https://chaos-data.projectdiscovery.io/index.json");
     return json::parse(data);
 }
 
@@ -87,7 +87,7 @@ void info(const json &jdata) {
             hackerone++;
         if (item.value("platform", "") == "bugcrowd")
             bugcrowd++;
-        if (item["program_url"].get<std::string>().find("intigriti") != std::string::npos)
+        if (item["program_url"].get<string>().find("intigriti") != string::npos)
             intigriti++;
         if (item.value("platform", "") == "")
             external++;
@@ -102,35 +102,35 @@ void info(const json &jdata) {
             swags++;
     }
     // Using last item's last_updated field for last update date.
-    std::string lastUpdated = jdata.empty() ? "N/A" : jdata.back().value("last_updated", "N/A");
-    std::cout << White << "[!] Programs Last Updated: " << lastUpdated.substr(0,10) << "\n";
-    std::cout << LightGreen << "[!] Subdomains: " << subdomains << "\n";
-    std::cout << Green << "[!] Total programs: " << jdata.size() << Default << "\n";
-    std::cout << LightCyan << "[!] Updated programs: " << changed << Default << "\n";
-    std::cout << Blue << "[!] New programs: " << newCount << Default << "\n";
-    std::cout << LightGray << "[!] HackerOne programs: " << hackerone << Default << "\n";
-    std::cout << Magenta << "[!] Intigriti programs: " << intigriti << Default << "\n";
-    std::cout << Yellow << "[!] BugCrowd programs: " << bugcrowd << Default << "\n";
-    std::cout << LightGreen << "[!] Self-hosted programs: " << external << Default << "\n";
-    std::cout << Cyan << "[!] Programs with rewards: " << rewards << Default << "\n";
-    std::cout << Yellow << "[!] Programs offering swag: " << swags << Default << "\n";
-    std::cout << LightRed << "[!] Programs with no rewards: " << norewards << Default << "\n";
+    string lastUpdated = jdata.empty() ? "N/A" : jdata.back().value("last_updated", "N/A");
+    cout << White << "[!] Programs Last Updated: " << lastUpdated.substr(0,10) << "\n";
+    cout << LightGreen << "[!] Subdomains: " << subdomains << "\n";
+    cout << Green << "[!] Total programs: " << jdata.size() << Default << "\n";
+    cout << LightCyan << "[!] Updated programs: " << changed << Default << "\n";
+    cout << Blue << "[!] New programs: " << newCount << Default << "\n";
+    cout << LightGray << "[!] HackerOne programs: " << hackerone << Default << "\n";
+    cout << Magenta << "[!] Intigriti programs: " << intigriti << Default << "\n";
+    cout << Yellow << "[!] BugCrowd programs: " << bugcrowd << Default << "\n";
+    cout << LightGreen << "[!] Self-hosted programs: " << external << Default << "\n";
+    cout << Cyan << "[!] Programs with rewards: " << rewards << Default << "\n";
+    cout << Yellow << "[!] Programs offering swag: " << swags << Default << "\n";
+    cout << LightRed << "[!] Programs with no rewards: " << norewards << Default << "\n";
 }
 
-void downloadFile(const std::string &url, const std::string &filepath) {
-    std::string data = httpGet(url);
-    std::ofstream outfile(filepath, std::ios::binary);
+void downloadFile(const string &url, const string &filepath) {
+    string data = httpGet(url);
+    ofstream outfile(filepath, ios::binary);
     outfile.write(data.c_str(), data.size());
     outfile.close();
-    std::cout << LightGreen << "[!] File " << filepath << " downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] File " << filepath << " downloaded successfully." << Default << "\n";
 }
 
 // Helper: Determine the category folder for a program.
 // If the program offers swag, return "swag"; otherwise, return its platform value (or "external" if none).
-std::string getCategory(const json &item) {
+string getCategory(const json &item) {
     if (item.find("swag") != item.end())
         return "swag";
-    std::string plat = item.value("platform", "");
+    string plat = item.value("platform", "");
     return (!plat.empty() ? plat : "external");
 }
 
@@ -140,26 +140,26 @@ std::string getCategory(const json &item) {
 // For non-swag items, the file is stored directly in: 
 //     $HOME/subdomains/<platform>/<programName>.zip
 void downloadProgramItem(const json &item) {
-    std::string name = item.value("name", "");
-    std::string url = item.value("URL", "");
-    std::string category = getCategory(item);
+    string name = item.value("name", "");
+    string url = item.value("URL", "");
+    string category = getCategory(item);
 
     // Determine the base download directory from the HOME environment variable.
-    const char* home = std::getenv("HOME");
-    std::string baseDir = home ? std::string(home) + "/subdomains" : "subdomains";
+    const char* home = getenv("HOME");
+    string baseDir = home ? string(home) + "/subdomains" : "subdomains";
 
     // Create the base directory.
-    fs::create_directories(baseDir);
+    create_directories(baseDir);
 
     // For non-swag items, use the platform (or "external") folder.
-    fs::path categoryDir = fs::path(baseDir) / category;
-    fs::create_directories(categoryDir);
+    path categoryDir = path(baseDir) / category;
+    create_directories(categoryDir);
 
-    fs::path filePath;
+    path filePath;
     if (category == "swag") {
         // For swag, create a subdirectory with the program name.
-        fs::path programDir = categoryDir / name;
-        fs::create_directories(programDir);
+        path programDir = categoryDir / name;
+        create_directories(programDir);
         filePath = programDir / (name + ".zip");
     } else {
         // For non-swag, place the file directly into the category folder.
@@ -168,12 +168,12 @@ void downloadProgramItem(const json &item) {
     downloadFile(url, filePath.string());
 }
 
-void down(const json &jdata, const std::string &downloadName) {
-    std::cout << "--------------------\n";
+void down(const json &jdata, const string &downloadName) {
+    cout << "--------------------\n";
     for (const auto &item : jdata) {
         if(item.value("name", "") == downloadName) {
-            std::cout << LightGreen << "[!] Program found." << Default << "\n";
-            std::cout << Cyan << "[!] Downloading " << downloadName << " ..." << Default << "\n";
+            cout << LightGreen << "[!] Program found." << Default << "\n";
+            cout << Cyan << "[!] Downloading " << downloadName << " ..." << Default << "\n";
             downloadProgramItem(item);
             return;
         }
@@ -181,200 +181,181 @@ void down(const json &jdata, const std::string &downloadName) {
 }
 
 void list_all(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << White << "[!] Listing all programs:" << Default << "\n";
-    for (const auto &item : jdata) {
-        std::cout << Blue << item.value("name", "") << Default << "\n";
-    }
+    cout << "--------------------\n";
+    cout << White << "[!] Listing all programs:" << Default << "\n";
+    for (const auto &item : jdata)
+        cout << Blue << item.value("name", "") << Default << "\n";
 }
 
 void bugcrowd(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << Yellow << "[!] Listing BugCrowd programs:" << Default << "\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    cout << Yellow << "[!] Listing BugCrowd programs:" << Default << "\n";
+    for (const auto &item : jdata)
         if(item.value("platform", "") == "bugcrowd")
-            std::cout << Yellow << item.value("name", "") << Default << "\n";
-    }
+            cout << Yellow << item.value("name", "") << Default << "\n";
 }
 
 void hackerone(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << White << "[!] Listing HackerOne programs:" << Default << "\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    cout << White << "[!] Listing HackerOne programs:" << Default << "\n";
+    for (const auto &item : jdata)
         if(item.value("platform", "") == "hackerone")
-            std::cout << White << item.value("name", "") << Default << "\n";
-    }
+            cout << White << item.value("name", "") << Default << "\n";
 }
 
 void intigriti(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << Magenta << "[!] Listing Intigriti programs:" << Default << "\n";
-    for (const auto &item : jdata) {
-        if(item["program_url"].get<std::string>().find("intigriti") != std::string::npos)
-            std::cout << Magenta << item.value("name", "") << Default << "\n";
-    }
+    cout << "--------------------\n";
+    cout << Magenta << "[!] Listing Intigriti programs:" << Default << "\n";
+    for (const auto &item : jdata)
+        if(item["program_url"].get<string>().find("intigriti") != string::npos)
+            cout << Magenta << item.value("name", "") << Default << "\n";
 }
 
 void external(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << Cyan << "[!] Listing self-hosted programs:" << Default << "\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    cout << Cyan << "[!] Listing self-hosted programs:" << Default << "\n";
+    for (const auto &item : jdata)
         if(item.value("platform", "") == "")
-            std::cout << Cyan << item.value("name", "") << Default << "\n";
-    }
+            cout << Cyan << item.value("name", "") << Default << "\n";
 }
 
 void swags(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << LightGreen << "[!] Listing swag programs:" << Default << "\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    cout << LightGreen << "[!] Listing swag programs:" << Default << "\n";
+    for (const auto &item : jdata)
         if(item.find("swag") != item.end())
-            std::cout << LightGreen << item.value("name", "") << Default << "\n";
-    }
+            cout << LightGreen << item.value("name", "") << Default << "\n";
 }
 
 void rewards(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << Cyan << "[!] Listing programs with rewards:" << Default << "\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    cout << Cyan << "[!] Listing programs with rewards:" << Default << "\n";
+    for (const auto &item : jdata)
         if(item.value("bounty", false))
-            std::cout << Cyan << item.value("name", "") << Default << "\n";
-    }
+            cout << Cyan << item.value("name", "") << Default << "\n";
 }
 
 void norewards(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << Red << "[!] Listing programs with no rewards:" << Default << "\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    cout << Red << "[!] Listing programs with no rewards:" << Default << "\n";
+    for (const auto &item : jdata)
         if(!item.value("bounty", false))
-            std::cout << Red << item.value("name", "") << Default << "\n";
-    }
+            cout << Red << item.value("name", "") << Default << "\n";
 }
 
 void list_new(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << LightGreen << "[!] Listing new programs:" << Default << "\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    cout << LightGreen << "[!] Listing new programs:" << Default << "\n";
+    for (const auto &item : jdata)
         if(item.value("is_new", false))
-            std::cout << LightGreen << item.value("name", "") << Default << "\n";
-    }
+            cout << LightGreen << item.value("name", "") << Default << "\n";
 }
 
 void changed(const json &jdata) {
-    std::cout << "--------------------\n";
-    std::cout << Cyan << "[!] Listing updated programs:" << Default << "\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    cout << Cyan << "[!] Listing updated programs:" << Default << "\n";
+    for (const auto &item : jdata)
         if(item.value("change", 0) != 0)
-            std::cout << Cyan << item.value("name", "") << Default << "\n";
-    }
+            cout << Cyan << item.value("name", "") << Default << "\n";
 }
 
 void download_all(const json &jdata) {
-    std::cout << "--------------------\n";
+    cout << "--------------------\n";
     for (const auto &item : jdata) {
-        std::cout << Blue << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+        cout << Blue << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
         downloadProgramItem(item);
     }
-    std::cout << LightGreen << "[!] All programs downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All programs downloaded successfully." << Default << "\n";
 }
 
 void bc_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
         if(item.value("platform", "") == "bugcrowd") {
-            std::cout << Yellow << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+            cout << Yellow << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All BugCrowd programs downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All BugCrowd programs downloaded successfully." << Default << "\n";
 }
 
 void h1_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
         if(item.value("platform", "") == "hackerone") {
-            std::cout << White << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+            cout << White << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All HackerOne programs downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All HackerOne programs downloaded successfully." << Default << "\n";
 }
 
 void intigriti_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
-        if(item["program_url"].get<std::string>().find("intigriti") != std::string::npos) {
-            std::cout << Magenta << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
+        if(item["program_url"].get<string>().find("intigriti") != string::npos) {
+            cout << Magenta << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All Intigriti programs downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All Intigriti programs downloaded successfully." << Default << "\n";
 }
 
 void external_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
         if(item.value("platform", "") == "") {
-            std::cout << White << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+            cout << White << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All self-hosted programs downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All self-hosted programs downloaded successfully." << Default << "\n";
 }
 
 void new_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
         if(item.value("is_new", false)) {
-            std::cout << Cyan << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+            cout << Cyan << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All new programs downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All new programs downloaded successfully." << Default << "\n";
 }
 
 void updated_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
         if(item.value("change", 0) != 0) {
-            std::cout << Blue << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+            cout << Blue << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All updated programs downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All updated programs downloaded successfully." << Default << "\n";
 }
 
 void swags_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
         if(item.find("swag") != item.end()) {
-            std::cout << LightYellow << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+            cout << LightYellow << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All swag programs downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All swag programs downloaded successfully." << Default << "\n";
 }
 
 void rewards_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
         if(item.value("bounty", false)) {
-            std::cout << Cyan << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+            cout << Cyan << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All programs with rewards downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All programs with rewards downloaded successfully." << Default << "\n";
 }
 
 void norewards_down(const json &jdata) {
-    std::cout << "--------------------\n";
-    for (const auto &item : jdata) {
+    cout << "--------------------\n";
+    for (const auto &item : jdata)
         if(!item.value("bounty", false)) {
-            std::cout << LightRed << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
+            cout << LightRed << "[!] Downloading " << item.value("name", "") << "                   \r" << Default;
             downloadProgramItem(item);
         }
-    }
-    std::cout << LightGreen << "[!] All programs with no rewards downloaded successfully." << Default << "\n";
+    cout << LightGreen << "[!] All programs with no rewards downloaded successfully." << Default << "\n";
 }
 
 struct Options {
@@ -399,39 +380,39 @@ struct Options {
     bool download_norewards = false;
     bool download_new = false;
     bool download_updated = false;
-    std::string download;
+    string download;
 };
 
 void printUsage(const char* progName) {
-    std::cout << "Usage: " << progName << " [options]\n"
-              << "Options:\n"
-              << "  -list                        List all programs\n"
-              << "  --list-bugcrowd              List BugCrowd programs\n"
-              << "  --list-hackerone             List HackerOne programs\n"
-              << "  --list-intigriti             List Intigriti programs\n"
-              << "  --list-external              List Self Hosted programs\n"
-              << "  --list-swags                 List Swags Offers programs\n"
-              << "  --list-rewards               List programs with rewards\n"
-              << "  --list-norewards             List programs with no rewards\n"
-              << "  --list-new                   List new programs\n"
-              << "  --list-updated               List updated programs\n"
-              << "  -download <program>          Download specific program\n"
-              << "  --download-all               Download all programs\n"
-              << "  --download-bugcrowd          Download BugCrowd programs\n"
-              << "  --download-hackerone         Download HackerOne programs\n"
-              << "  --download-intigriti         Download Intigriti programs\n"
-              << "  --download-external          Download External programs\n"
-              << "  --download-swags             Download Swags programs\n"
-              << "  --download-rewards           Download programs with rewards\n"
-              << "  --download-norewards         Download programs with no rewards\n"
-              << "  --download-new               Download new programs\n"
-              << "  --download-updated           Download updated programs\n";
+    cout << "Usage: " << progName << " [options]\n"
+         << "Options:\n"
+         << "  -list                        List all programs\n"
+         << "  --list-bugcrowd              List BugCrowd programs\n"
+         << "  --list-hackerone             List HackerOne programs\n"
+         << "  --list-intigriti             List Intigriti programs\n"
+         << "  --list-external              List Self Hosted programs\n"
+         << "  --list-swags                 List Swags Offers programs\n"
+         << "  --list-rewards               List programs with rewards\n"
+         << "  --list-norewards             List programs with no rewards\n"
+         << "  --list-new                   List new programs\n"
+         << "  --list-updated               List updated programs\n"
+         << "  -download <program>          Download specific program\n"
+         << "  --download-all               Download all programs\n"
+         << "  --download-bugcrowd          Download BugCrowd programs\n"
+         << "  --download-hackerone         Download HackerOne programs\n"
+         << "  --download-intigriti         Download Intigriti programs\n"
+         << "  --download-external          Download External programs\n"
+         << "  --download-swags             Download Swags programs\n"
+         << "  --download-rewards           Download programs with rewards\n"
+         << "  --download-norewards         Download programs with no rewards\n"
+         << "  --download-new               Download new programs\n"
+         << "  --download-updated           Download updated programs\n";
 }
 
 int main(int argc, char* argv[]) {
     // Clear the screen
     system("clear");
-    std::cout << banner << "\n";
+    cout << banner << "\n";
 
     Options opts;
     static struct option long_options[] = {
@@ -460,12 +441,12 @@ int main(int argc, char* argv[]) {
     int opt;
     int long_index = 0;
     while ((opt = getopt_long(argc, argv, "l d:", long_options, &long_index)) != -1) {
-        if (opt == 'l') {
+        if (opt == 'l')
             opts.list = true;
-        } else if(opt == 'd') {
+        else if(opt == 'd')
             opts.download = optarg;
-        } else if(opt == 0) {
-            std::string optName = long_options[long_index].name;
+        else if(opt == 0) {
+            string optName = long_options[long_index].name;
             if(optName == "list-bugcrowd") opts.list_bugcrowd = true;
             else if(optName == "list-hackerone") opts.list_hackerone = true;
             else if(optName == "list-intigriti") opts.list_intigriti = true;
@@ -485,7 +466,8 @@ int main(int argc, char* argv[]) {
             else if(optName == "download-norewards") opts.download_norewards = true;
             else if(optName == "download-new") opts.download_new = true;
             else if(optName == "download-updated") opts.download_updated = true;
-        } else {
+        }
+        else {
             printUsage(argv[0]);
             return 1;
         }
