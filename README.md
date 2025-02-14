@@ -43,8 +43,8 @@ cSpy is a lightweight, modern C++ tool inspired by [chaos](https://chaos.project
    cSpy uses cURL and the [nlohmann/json](https://github.com/nlohmann/json) library. These dependencies are usually available via your package manager or bundled in the project. Make sure cURL is installed:
    
    ```bash
-   sudo apt-get install libcurl4-openssl-dev nlohmann-json3-dev  # Debian/Ubuntu
-   sudo dnf install libcurl-devel json            # Fedora
+   sudo apt-get install libcurl4-openssl-dev nlohmann-json3-dev  # Debian/Ubuntu/Kali
+   sudo dnf install libcurl-devel json  # Fedora
    ```
 
 ---
