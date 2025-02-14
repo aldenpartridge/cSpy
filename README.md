@@ -16,7 +16,7 @@ cSpy is a lightweight, modern C++ tool inspired by [chaos](https://chaos.project
     <img src="https://img.shields.io/github/issues/aldenpartridge/cSpy.svg" alt="GitHub issues">
   </a>
   <a href="https://twitter.com/intent/follow?screen_name=0xkmac">
-    <img src="https://img.shields.io/twitter/follow/zor0x0x?style=social&logo=twitter" alt="Follow on Twitter">
+    <img src="https://img.shields.io/twitter/follow/0xkmac?style=social&logo=twitter" alt="Follow on Twitter">
   </a>
 </p>
 
